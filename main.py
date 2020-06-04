@@ -8,12 +8,12 @@ from nltk import word_tokenize
 import os 
 import re
 
-cached_stop_words = stopwords.words('english')
+cached_stop_words = set(stopwords.words('english'))
 
 def Tokenizer(str_input):
     words = re.sub(r"[^A-Za-z0-9\-]", " ", str_input).lower().split()
     porter_stemmer=PorterStemmer()
-    words = [porter_stemmer.stem(word) for word in words]
+    words = [porter_stemmer.stem(word) for word in words if not word in cached_stop_words]
     return words
 
 def predicter(review):
@@ -110,7 +110,7 @@ def index():
             rating=5
         img[5] = os.path.join(app.config['UPLOAD_FOLDER'], str(rating)+'.png')
     for i in range(1,6):
-        print(pos[i], neg[i])
+        print pos[i], neg[i]
     return render_template("index.html", user_image1 = img[1], user_image2 = img[2], user_image3 = img[3], user_image4 = img[4] ,user_image5 = img[5])
 
 
